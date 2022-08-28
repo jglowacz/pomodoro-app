@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
+import { useTimer } from 'react-timer-hook';
 
-export default function Counter({ seconds }) {
-  const [isActive, setIsActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(seconds)
-
-
-  useEffect(() => {
-    if (!timeLeft) return;
-    if (isActive) {
-      const intervalId = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000)
-      return () => clearInterval(intervalId)
-    }
-  }, [timeLeft])
+export default function Counter({ expiryTimestamp }) {
+  const { seconds,
+    minutes,
+    isRunning,
+    start,
+    pause,
+    restart,
+  } = useTimer({ expiryTimestamp, autoStart: false, onExpire: () => console.warn('onExpire called') })
 
   return (
     <>
       <div className="wrapper">
-        <div className="counter">{timeLeft}</div>
-        <button onClick={() => setIsActive(true)} id="start" className="button">Start</button>
-        <button id="reset" className="button">Reset</button>
-        <button id="stop" className="button">Stop</button>
+        <div className="counter"><span>{minutes}:{seconds < 10 ? '0' + seconds : seconds}</span></div>
+        <div className="button-container">
+          <button onClick={start} id="start" className="button">Start</button>
+          <button onClick={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + 25 * 60);
+            restart(time)
+          }} id="reset" className="button">Restart</button>
+          <button onClick={pause} id="pause" className="button">Pause</button>
+        </div>
       </div>
     </>
   );
