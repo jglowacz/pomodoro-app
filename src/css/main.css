@@ -20,8 +20,9 @@ body {
   font-family: var(--default-font)
 }
 
-.wrapper {
+.wrapper, .counter {
   background-color: var(--primary-color);
+  color: var(--tertiary-color);
   padding: 20px;
   border-radius: 10px;
 }
